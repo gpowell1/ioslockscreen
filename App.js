@@ -7,10 +7,12 @@ import dayjs from 'dayjs';
 import NotificationsList from './src/components/NotificationsList';
 import SwipeUpToOpen from './src/components/SwipeUpToOpen';
 
-import Animated, {SlideInDown, SlideInUp } from 'react-native-reanimated';
+import Animated, {SlideInDown, SlideInUp, useSharedValue, useAnimatedStyle, interpolate } from 'react-native-reanimated';
 
 export default function App() {
   const [date, setDate] = useState(dayjs());
+
+  const footerVisibility = useSharedValue(1);
   //display time/clock
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,14 +22,20 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const animatedFooterStyle = useAnimatedStyle(() => ({
+    marginTop: interpolate(footerVisibility.value, [0, 1], [-85, 0]),
+    opacity: footerVisibility.value,
+  }));
+
   return (
     <ImageBackground source={wallpaper} style={styles.container}>
 
       {/* Notification list */}
 
       <NotificationsList
+      footerVisibility={footerVisibility}
         ListHeaderComponent={() =>(
-          <Animated.View style={styles.header}>
+          <Animated.View entering={SlideInUp} style={styles.header}>
             <Ionicons name = 'ios-lock-closed' size={20} color="white" />
             <Text style={styles.date}>{date.format("dddd, DD MMMM")}</Text>
             <Text style={styles.time}>{date.format("hh:mm")}</Text>
@@ -35,7 +43,7 @@ export default function App() {
       )}
     />
 
-      <Animated.View entering={SlideInDown} style={styles.footer}>
+      <Animated.View entering={SlideInDown} style={[styles.footer, animatedFooterStyle]}>
         <View style={styles.icon}>
           <MaterialCommunityIcons name="flashlight" size={24} color="white" />
         </View>
@@ -45,8 +53,6 @@ export default function App() {
         <View style={styles.icon}>
           <Ionicons name="ios-camera" size={24} color="white" />
         </View>
-
-
       </Animated.View>
 
       <StatusBar style="light" />
@@ -82,7 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingVertical: 10,
     paddingHorizontal: 30,
-    height: 80,
+    height: 75,
   },
   icon: {
     backgroundColor: '#00000050',
