@@ -5,6 +5,7 @@ import wallpaper from './assets/images/wallpaper.webp';
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from 'dayjs';
 import NotificationsList from './src/components/NotificationsList';
+import SwipeUpToOpen from './src/components/SwipeUpToOpen';
 
 import Animated, {SlideInDown, SlideInUp } from 'react-native-reanimated';
 
@@ -26,7 +27,7 @@ export default function App() {
 
       <NotificationsList
         ListHeaderComponent={() =>(
-          <Animated.View entering={SlideInUp} style={styles.header}>
+          <Animated.View style={styles.header}>
             <Ionicons name = 'ios-lock-closed' size={20} color="white" />
             <Text style={styles.date}>{date.format("dddd, DD MMMM")}</Text>
             <Text style={styles.time}>{date.format("hh:mm")}</Text>
@@ -38,6 +39,8 @@ export default function App() {
         <View style={styles.icon}>
           <MaterialCommunityIcons name="flashlight" size={24} color="white" />
         </View>
+
+        <SwipeUpToOpen />
 
         <View style={styles.icon}>
           <Ionicons name="ios-camera" size={24} color="white" />
@@ -76,9 +79,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop:"auto",
+    marginBottom: 10,
     paddingVertical: 10,
     paddingHorizontal: 30,
-    height: 75,
+    height: 80,
   },
   icon: {
     backgroundColor: '#00000050',
