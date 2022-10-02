@@ -7,12 +7,13 @@ import dayjs from 'dayjs';
 import NotificationsList from './src/components/NotificationsList';
 import SwipeUpToOpen from './src/components/SwipeUpToOpen';
 
-import Animated, {SlideInDown, SlideInUp, useSharedValue, useAnimatedStyle, interpolate } from 'react-native-reanimated';
+import Animated, {SlideInDown, SlideInUp, useSharedValue, useAnimatedStyle, interpolate, useDerivedValue } from 'react-native-reanimated';
 
 export default function App() {
   const [date, setDate] = useState(dayjs());
 
   const footerVisibility = useSharedValue(1);
+  const footerHeight = useDerivedValue(() => interpolate(footerVisibility.value, [0, 1], [0, 85]))
   //display time/clock
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,6 +35,7 @@ export default function App() {
 
       <NotificationsList
       footerVisibility={footerVisibility}
+      footerHeight={footerHeight}
         ListHeaderComponent={() =>(
           <Animated.View entering={SlideInUp} style={styles.header}>
             <Ionicons name = 'ios-lock-closed' size={20} color="white" />

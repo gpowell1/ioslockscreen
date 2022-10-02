@@ -4,21 +4,34 @@ import notifications from "../../assets/data/notifications";
 
 import NotificationItem from "./NotificationItem";
 
-import Animated, { useAnimatedScrollHandler, withTiming } from "react-native-reanimated";
-//import { event } from "jquery";
+import Animated, { useAnimatedScrollHandler, useSharedValue, withTiming, withSpring } from "react-native-reanimated";
 
-const NotificationsList = ({ footerVisibility, ...flatListProps }) => {
+
+const NotificationsList = ({ footerVisibility, footerHeight, ...flatListProps }) => {
   const { height } = useWindowDimensions();
+  const listVisibility = useSharedValue(1);
+  const scrollY = useSharedValue(0);
 
   const handler = useAnimatedScrollHandler({
     onScroll: (event) => {
       const y = event.contentOffset.y;
+      scrollY.value = y;
       if (y < 10) {
           // here we should have the footer open
           footerVisibility.value = withTiming(1);
       } else {
          // close the footer
          footerVisibility.value = withTiming(0);
+      }
+    },
+    onBeginDrag: (event) => {
+      if(event.contentOffset.y < 1) {
+        listVisibility.value = withSpring(1);
+      }
+    },
+    onEndDrag: (event) => {
+      if(event.contentOffset.y < 0) {
+        listVisibility.value = withTiming(0); //withSpring(0);
       }
     }
   })
@@ -30,6 +43,9 @@ const NotificationsList = ({ footerVisibility, ...flatListProps }) => {
         <NotificationItem
           data={item}
           index={index}
+          listVisibility = {listVisibility}
+          scrollY = {scrollY}
+          footerHeight={footerHeight}
         />
       )}
       {...flatListProps}
