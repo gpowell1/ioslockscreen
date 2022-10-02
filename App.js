@@ -37,7 +37,7 @@ export default function App() {
       footerVisibility={footerVisibility}
       footerHeight={footerHeight}
         ListHeaderComponent={() =>(
-          <Animated.View entering={SlideInUp} style={styles.header}>
+          <Animated.View style={styles.header}>
             <Ionicons name = 'ios-lock-closed' size={20} color="white" />
             <Text style={styles.date}>{date.format("dddd, DD MMMM")}</Text>
             <Text style={styles.time}>{date.format("hh:mm")}</Text>
@@ -45,7 +45,7 @@ export default function App() {
       )}
     />
 
-      <Animated.View entering={SlideInDown} style={[styles.footer, animatedFooterStyle]}>
+      <Animated.View style={[styles.footer, animatedFooterStyle]}>
         <View style={styles.icon}>
           <MaterialCommunityIcons name="flashlight" size={24} color="white" />
         </View>
