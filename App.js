@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import wallpaper from './assets/images/wallpaper.webp';
@@ -28,6 +28,14 @@ export default function App() {
     opacity: footerVisibility.value,
   }));
 
+  const Header = useMemo(() => (
+    <Animated.View entering={SlideInUp} style={styles.header}>
+      <Ionicons name = 'ios-lock-closed' size={20} color="white" />
+      <Text style={styles.date}>{date.format("dddd, DD MMMM")}</Text>
+      <Text style={styles.time}>{date.format("hh:mm")}</Text>
+    </Animated.View>
+  ), [date])
+
   return (
     <ImageBackground source={wallpaper} style={styles.container}>
 
@@ -36,13 +44,7 @@ export default function App() {
       <NotificationsList
       footerVisibility={footerVisibility}
       footerHeight={footerHeight}
-        ListHeaderComponent={() =>(
-          <Animated.View style={styles.header}>
-            <Ionicons name = 'ios-lock-closed' size={20} color="white" />
-            <Text style={styles.date}>{date.format("dddd, DD MMMM")}</Text>
-            <Text style={styles.time}>{date.format("hh:mm")}</Text>
-          </Animated.View>
-      )}
+      ListHeaderComponent={Header}
     />
 
       <Animated.View style={[styles.footer, animatedFooterStyle]}>
